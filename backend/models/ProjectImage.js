@@ -22,6 +22,10 @@ const projectImageSchema = new mongoose.Schema({
     required: true,
     enum: ['architecture', 'interiors', 'automation', 'construction', 'kitchens', 'engineering', 'lifts', 'tiles']
   },
+  subService: {
+    type: String,
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -22,6 +22,7 @@ const projectImageController = {
         title: req.body.title,
         description: req.body.description,
         service: req.body.service,
+        subService: req.body.subService,
         imageUrl: result.secure_url,
         cloudinaryId: result.public_id
       });
@@ -49,7 +50,7 @@ const projectImageController = {
   updateImage: async (req, res) => {
     try {
       const { id } = req.params;
-      const { title, description, service } = req.body;
+      const { title, description, service, subService } = req.body;
 
       const image = await ProjectImage.findById(id);
       if (!image) {
@@ -60,6 +61,7 @@ const projectImageController = {
       image.title = title;
       image.description = description;
       image.service = service;
+      image.subService = subService;
 
       await image.save();
 

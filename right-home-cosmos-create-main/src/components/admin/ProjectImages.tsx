@@ -38,6 +38,7 @@ interface ProjectImage {
   description: string;
   imageUrl: string;
   service: string;
+  subService: string;
   createdAt: string;
 }
 
@@ -55,7 +56,8 @@ const ProjectImages = () => {
   const [editForm, setEditForm] = useState({
     title: '',
     description: '',
-    service: ''
+    service: '',
+    subService: ''
   });
   const { token } = useAuth();
 
@@ -63,6 +65,7 @@ const ProjectImages = () => {
     title: '',
     description: '',
     service: '',
+    subService: '',
     image: null as File | null
   });
 
@@ -106,7 +109,8 @@ const ProjectImages = () => {
     setEditForm({
       title: image.title,
       description: image.description,
-      service: image.service
+      service: image.service,
+      subService: image.subService
     });
     setPreviewDialogOpen(true);
     setIsEditing(false);
@@ -163,6 +167,7 @@ const ProjectImages = () => {
     formDataToSend.append('title', formData.title);
     formDataToSend.append('description', formData.description);
     formDataToSend.append('service', formData.service);
+    formDataToSend.append('subService', formData.subService);
     formDataToSend.append('image', formData.image);
 
     try {
@@ -186,7 +191,7 @@ const ProjectImages = () => {
       });
 
       setUploadDialogOpen(false);
-      setFormData({ title: '', description: '', service: '', image: null });
+      setFormData({ title: '', description: '', service: '', subService: '', image: null });
       await fetchAllImages(); // Refresh all images
     } catch (error) {
       toast({
@@ -245,6 +250,41 @@ const ProjectImages = () => {
     return service ? service.label : serviceValue;
   };
 
+  // Group images by service and then by subService
+  const groupedImages = React.useMemo(() => {
+    return filteredImages.reduce((acc, image) => {
+      if (!acc[image.service]) {
+        acc[image.service] = {};
+      }
+      if (!acc[image.service][image.subService]) {
+        acc[image.service][image.subService] = [];
+      }
+      acc[image.service][image.subService].push(image);
+      return acc;
+    }, {} as Record<string, Record<string, ProjectImage[]>>);
+  }, [filteredImages]);
+
+  // Get unique sub-services for a given service
+  const getExistingSubServices = (serviceValue: string) => {
+    return Array.from(new Set(
+      images
+        .filter(img => img.service === serviceValue)
+        .map(img => img.subService)
+    )).filter(Boolean);
+  };
+
+  // Compute existing sub-services for the selected service
+  const existingSubServices = React.useMemo(() => {
+    if (!formData.service) return [];
+    return getExistingSubServices(formData.service);
+  }, [formData.service, images]);
+
+  // Compute existing sub-services for editing
+  const existingEditSubServices = React.useMemo(() => {
+    if (!editForm.service) return [];
+    return getExistingSubServices(editForm.service);
+  }, [editForm.service, images]);
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -299,6 +339,36 @@ const ProjectImages = () => {
                 </Select>
               </div>
               <div>
+                <Label htmlFor="subService">Sub Service</Label>
+                <div className="space-y-2">
+                  <Input
+                    id="subService"
+                    className="bg-white text-black"
+                    value={formData.subService}
+                    onChange={e => setFormData(prev => ({ ...prev, subService: e.target.value }))}
+                    placeholder="Enter sub service name (e.g., Modern Kitchen, Master Bedroom)"
+                    list="subServiceSuggestions"
+                  />
+                  {existingSubServices.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      <span className="text-sm text-gray-500">Existing sub-services:</span>
+                      {existingSubServices.map((subService) => (
+                        <Button
+                          key={subService}
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="text-xs bg-white text-black hover:bg-gray-100"
+                          onClick={() => setFormData(prev => ({ ...prev, subService }))}
+                        >
+                          {subService}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div>
                 <Label htmlFor="image">Image</Label>
                 <Input
                   className="bg-white text-black"
@@ -343,38 +413,44 @@ const ProjectImages = () => {
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredImages && filteredImages.length > 0 ? (
-            filteredImages.map(image => (
-              <Card 
-                key={image._id} 
-                className="overflow-hidden bg-[#111] border-gray-800 hover:border-gold transition-all duration-300 cursor-pointer"
-                onClick={() => handleImageClick(image)}
-              >
-                <div className="aspect-square relative group">
-                  <img
-                    src={image.imageUrl}
-                    alt={image.title}
-                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span>{getServiceIcon(image.service)}</span>
-                        <span className="text-sm text-gold">{getServiceLabel(image.service)}</span>
-                      </div>
-                      <h3 className="font-semibold text-lg mb-2">{image.title}</h3>
-                      <p className="text-sm text-gray-300 line-clamp-3">{image.description}</p>
-                    </div>
+        <div className="space-y-12">
+          {Object.entries(groupedImages).map(([service, subServices]) => (
+            <div key={service} className="space-y-8">
+              <h2 className="text-2xl font-bold text-gold flex items-center gap-2">
+                {getServiceIcon(service)} {getServiceLabel(service)}
+              </h2>
+              {Object.entries(subServices).map(([subService, images]) => (
+                <div key={`${service}-${subService}`} className="space-y-4 ml-8">
+                  <h3 className="text-xl font-semibold text-white">
+                    {subService}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {images.map(image => (
+                      <Card 
+                        key={image._id} 
+                        className="overflow-hidden bg-[#111] border-gray-800 hover:border-gold transition-all duration-300 cursor-pointer"
+                        onClick={() => handleImageClick(image)}
+                      >
+                        <div className="aspect-square relative group">
+                          <img
+                            src={image.imageUrl}
+                            alt={image.title}
+                            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+                            <div>
+                              <h3 className="font-semibold text-lg mb-2">{image.title}</h3>
+                              <p className="text-sm text-gray-300 line-clamp-3">{image.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
                 </div>
-              </Card>
-            ))
-          ) : (
-            <div className="col-span-full text-center text-gray-400">
-              {selectedService !== 'all' ? 'No images found for this service.' : 'No images found.'}
+              ))}
             </div>
-          )}
+          ))}
         </div>
       )}
 
@@ -444,11 +520,38 @@ const ProjectImages = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div>
+                    <Label htmlFor="edit-subService">Sub Service</Label>
+                    <div className="space-y-2">
+                      <Input
+                        id="edit-subService"
+                        value={editForm.subService}
+                        onChange={e => setEditForm(prev => ({ ...prev, subService: e.target.value }))}
+                        className="bg-white text-black"
+                        placeholder="Enter sub service name"
+                        list="editSubServiceSuggestions"
+                      />
+                      {existingEditSubServices.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          <span className="text-sm text-gray-500">Existing sub-services:</span>
+                          {existingEditSubServices.map((subService) => (
+                            <Button
+                              key={subService}
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="text-xs bg-white text-black hover:bg-gray-100"
+                              onClick={() => setEditForm(prev => ({ ...prev, subService }))}
+                            >
+                              {subService}
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   <div className="flex gap-2 pt-4">
-                    <Button
-                      onClick={handleEditSubmit}
-                      className="flex-1"
-                    >
+                    <Button onClick={handleEditSubmit} className="flex-1">
                       <Save className="h-4 w-4 mr-2" />
                       Save Changes
                     </Button>
@@ -466,7 +569,7 @@ const ProjectImages = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-black">{selectedImage?.title}</h3>
                     <p className="text-sm text-gray-500">
-                      {getServiceIcon(selectedImage?.service || '')} {getServiceLabel(selectedImage?.service || '')}
+                      {getServiceIcon(selectedImage?.service || '')} {getServiceLabel(selectedImage?.service || '')} - {selectedImage?.subService}
                     </p>
                   </div>
                   <p className="text-gray-600">{selectedImage?.description}</p>
@@ -518,6 +621,18 @@ const ProjectImages = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Datalists for sub-service suggestions */}
+      <datalist id="subServiceSuggestions">
+        {existingSubServices.map((subService) => (
+          <option key={subService} value={subService} />
+        ))}
+      </datalist>
+      <datalist id="editSubServiceSuggestions">
+        {existingEditSubServices.map((subService) => (
+          <option key={subService} value={subService} />
+        ))}
+      </datalist>
     </div>
   );
 };

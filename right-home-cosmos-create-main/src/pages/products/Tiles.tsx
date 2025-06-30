@@ -5,14 +5,18 @@ import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
 import ContactSection from '@/components/ContactSection';
 
-interface Image {
-  url: string;
+interface ProjectImage {
+  _id: string;
   title: string;
   description: string;
+  imageUrl: string;
+  service: string;
+  subService: string;
+  createdAt: string;
 }
 
 const Tiles = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  const [images, setImages] = useState<ProjectImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,6 +39,13 @@ const Tiles = () => {
     fetchImages();
   }, []);
 
+  const galleryImages = images.map(image => ({
+    url: image.imageUrl,
+    title: image.title,
+    description: image.description,
+    subService: image.subService
+  }));
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -54,10 +65,12 @@ const Tiles = () => {
           From classic designs to modern patterns, we offer tiles that transform floors and walls.
         </p>
 
-        {images.length > 0 ? (
-          <ImageGallery images={images} title="Our Tile Projects" />
-        ) : (
-          <p className="text-gray-400">No images available at the moment.</p>
+        {!loading && galleryImages.length > 0 && (
+          <ImageGallery 
+            images={galleryImages} 
+            title="Our Tile Projects"
+            groupBySubService={true}
+          />
         )}
       </div>
       

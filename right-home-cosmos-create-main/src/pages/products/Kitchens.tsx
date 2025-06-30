@@ -11,6 +11,7 @@ interface ProjectImage {
   description: string;
   imageUrl: string;
   service: string;
+  subService: string;
   createdAt: string;
 }
 
@@ -41,7 +42,8 @@ const Kitchens = () => {
   const galleryImages = images.map(image => ({
     url: image.imageUrl,
     title: image.title,
-    description: image.description
+    description: image.description,
+    subService: image.subService
   }));
 
   if (loading) {
@@ -140,7 +142,8 @@ const Kitchens = () => {
         {!loading && galleryImages.length > 0 && (
           <ImageGallery 
             images={galleryImages} 
-            title="Our Kitchen Design Projects" 
+            title="Our Kitchen Projects"
+            groupBySubService={true}
           />
         )}
       </div>

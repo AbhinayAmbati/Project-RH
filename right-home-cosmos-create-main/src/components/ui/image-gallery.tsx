@@ -8,11 +8,13 @@ interface Image {
   url: string;
   title: string;
   description: string;
+  subService?: string;
 }
 
 interface ImageGalleryProps {
   images: Image[];
   title: string;
+  groupBySubService?: boolean;
 }
 
 // Custom DialogContent without the default close button
@@ -36,7 +38,7 @@ const CustomDialogContent = React.forwardRef<
 ));
 CustomDialogContent.displayName = "CustomDialogContent";
 
-const ImageGallery = ({ images, title }: ImageGalleryProps) => {
+const ImageGallery = ({ images, title, groupBySubService = false }: ImageGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
   const handlePrevious = () => {
@@ -57,31 +59,56 @@ const ImageGallery = ({ images, title }: ImageGalleryProps) => {
     if (e.key === 'Escape') setSelectedImage(null);
   };
 
+  // Group images by subService if enabled
+  const groupedImages = React.useMemo(() => {
+    if (!groupBySubService) return { "": images };
+    
+    return images.reduce((acc, image) => {
+      const subService = image.subService || "Other";
+      if (!acc[subService]) {
+        acc[subService] = [];
+      }
+      acc[subService].push(image);
+      return acc;
+    }, {} as Record<string, Image[]>);
+  }, [images, groupBySubService]);
+
+  const renderImageCard = (image: Image, index: number) => (
+    <Card 
+      key={index}
+      className="group relative overflow-hidden cursor-pointer bg-[#111] border-gray-800 hover:border-gold/50 transition-colors"
+      onClick={() => setSelectedImage(index)}
+    >
+      <div className="aspect-video relative">
+        <img
+          src={image.url}
+          alt={image.title}
+          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+          <div className="p-4 text-white">
+            <h3 className="font-semibold">{image.title}</h3>
+            <p className="text-sm text-gray-300">{image.description}</p>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+
   return (
     <div className="mt-12">
       <h2 className="text-2xl font-semibold text-white mb-6">{title}</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {images.map((image, index) => (
-          <Card 
-            key={index}
-            className="group relative overflow-hidden cursor-pointer bg-[#111] border-gray-800 hover:border-gold/50 transition-colors"
-            onClick={() => setSelectedImage(index)}
-          >
-            <div className="aspect-video relative">
-              <img
-                src={image.url}
-                alt={image.title}
-                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                <div className="p-4 text-white">
-                  <h3 className="font-semibold">{image.title}</h3>
-                  <p className="text-sm text-gray-300">{image.description}</p>
-                </div>
-              </div>
+      <div className="space-y-8">
+        {Object.entries(groupedImages).map(([subService, subImages]) => (
+          <div key={subService} className="space-y-4">
+            {subService && groupBySubService && (
+              <h3 className="text-xl font-semibold text-gold ml-4">{subService}</h3>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {subImages.map((image, index) => renderImageCard(image, index))}
             </div>
-          </Card>
+          </div>
         ))}
       </div>
 
