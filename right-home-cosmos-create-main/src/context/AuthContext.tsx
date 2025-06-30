@@ -124,20 +124,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (userData: RegisterData) => {
+  const register = async (data: RegisterData) => {
     try {
-      const response = await userApi.register(userData);
-
+      const response = await userApi.register(data);
+      
       if (!response.success) {
         throw new Error(response.message || 'Registration failed');
       }
-
-      setError(null);
+      
+      // SUCCESS CASE - Don't throw an error, don't show toast
+      // Just return the data so the component can handle the success
       return response.data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 
-        'Unable to connect to the server. Please check your internet connection and try again.';
-      setError(errorMessage);
+      
+    } catch (error: any) {
+      // Only throw errors for actual failures
+      if (error.message?.includes('Registration successful')) {
+        // If this is actually a success message, return success
+        return { success: true };
+      }
+      
+      const errorMessage = error.message || 'Registration failed. Please try again.';
       throw new Error(errorMessage);
     }
   };

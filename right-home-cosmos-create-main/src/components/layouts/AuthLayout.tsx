@@ -9,19 +9,41 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="min-h-screen bg-space-dark relative overflow-hidden">
       {/* Navigation */}
-      <nav className="p-4 relative z-10">
-        <div className="container-max">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gold-gradient rounded-lg flex items-center justify-center">
-              <span className="text-lg font-bold text-space-dark">RH</span>
-            </div>
-            <span className="text-2xl font-bold text-white">Right Home Cosmos</span>
-          </Link>
+      <nav className="fixed top-0 left-0 right-0 p-4 bg-[#0A0A0A]/80 backdrop-blur-lg border-b border-gray-800/50 z-50">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <Link to="/" className="flex items-center space-x-2 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-gold to-gold/80 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
+                <span className="text-lg font-bold text-space-dark">RH</span>
+              </div>
+              <span className="text-2xl font-bold text-white group-hover:text-gold transition-colors">Right Home</span>
+            </Link>
+
+            <Link 
+              to="/" 
+              className="text-gray-400 hover:text-gold transition-colors flex items-center space-x-1 text-sm font-medium"
+            >
+              <svg 
+                className="w-4 h-4" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                />
+              </svg>
+              <span>Back to Home</span>
+            </Link>
+          </div>
         </div>
       </nav>
 
-      {/* Auth Content */}
-      <div className="container-max px-4 py-8 relative z-10">
+      {/* Main Content - Adjusted padding to account for fixed nav */}
+      <div className="container-max px-4 pt-24 pb-8 relative z-10">
         <div className="max-w-md mx-auto">
           {/* Main Content */}
           <div className="relative animate-fade-in-up">

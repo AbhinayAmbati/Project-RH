@@ -109,7 +109,6 @@ function App() {
         <Toaster 
           position="top-right"
           expand={false}
-          richColors
           closeButton
           style={{
             marginTop: '4rem'
