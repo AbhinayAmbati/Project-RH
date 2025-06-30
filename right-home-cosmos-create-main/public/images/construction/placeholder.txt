@@ -1,0 +1,14 @@
+Replace this file with your actual construction project images. 
+Name them as:
+- project1.jpg
+- project2.jpg
+- project3.jpg
+- project4.jpg
+- project5.jpg
+- project6.jpg
+
+Images should be in JPG/JPEG format and ideally should be:
+- Aspect ratio: 16:9
+- Resolution: At least 1920x1080px
+- File size: Optimized for web (usually under 500KB per image)
+- Content: High-quality photos of your actual construction projects 

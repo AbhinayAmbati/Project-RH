@@ -1,6 +1,6 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { NavLink } from 'react-router-dom';
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,18 +120,18 @@ const HeroSection = () => {
 
               {/* Orbiting service elements */}
               {[
-                { service: 'Architecture', icon: '🏛️', angle: 0, radius: 150 },
-                { service: 'Interiors', icon: '🪑', angle: 45, radius: 160 },
-                { service: 'Automation', icon: '🤖', angle: 90, radius: 155 },
-                { service: 'Construction', icon: '🏗️', angle: 135, radius: 145 },
-                { service: 'Kitchens', icon: '🍽️', angle: 180, radius: 165 },
-                { service: 'Engineering', icon: '⚙️', angle: 225, radius: 150 },
-                { service: 'Lifts', icon: '🛗', angle: 270, radius: 160 },
-                { service: 'Tiles', icon: '🚿', angle: 315, radius: 155 },
+                { service: 'Architecture', icon: '🏛️', angle: 0, radius: 150, path: '/products/architecture' },
+                { service: 'Interiors', icon: '🪑', angle: 45, radius: 160, path: '/products/interiors' },
+                { service: 'Automation', icon: '🤖', angle: 90, radius: 155, path: '/products/automation' },
+                { service: 'Construction', icon: '🏗️', angle: 135, radius: 145, path: '/products/construction' },
+                { service: 'Kitchens', icon: '🍽️', angle: 180, radius: 165, path: '/products/kitchens' },
+                { service: 'Engineering', icon: '⚙️', angle: 225, radius: 150, path: '/products/engineering' },
+                { service: 'Lifts', icon: '🛗', angle: 270, radius: 160, path: '/products/lifts' },
+                { service: 'Tiles', icon: '🚿', angle: 315, radius: 155, path: '/products/tiles' },
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="absolute group cursor-pointer"
+                  className="absolute group cursor-pointer z-10 w-20 h-20"
                   style={{
                     left: '50%',
                     top: '50%',
@@ -146,14 +146,23 @@ const HeroSection = () => {
                   }}
                 >
                   {/* Service Icon Container */}
+                  <NavLink 
+                    to={item.path} 
+                    className="absolute group cursor-pointer z-10 w-20 h-20"
+                    style={{
+                      transform: `translate(-50%, -50%)`,
+                      left: '50%',
+                      top: '50%',
+                    }}
+                  > 
                   <div className="w-20 h-20 glass-effect rounded-2xl flex items-center justify-center group-hover:scale-125 transition-all duration-500 hover:bg-gold/20 shadow-xl">
                     <div className="text-3xl group-hover:scale-110 transition-transform duration-300">
                       {item.icon}
                     </div>
                   </div>
-                  
+                  </NavLink>                  
                   {/* Service Name with Animation */}
-                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0 z-20">
                     <div className="bg-space-dark/90 backdrop-blur-sm border border-gold/30 rounded-lg px-3 py-1 whitespace-nowrap">
                       <span className="text-sm text-gold font-medium">{item.service}</span>
                     </div>
@@ -161,7 +170,7 @@ const HeroSection = () => {
 
                   {/* Connecting Lines */}
                   <div 
-                    className="absolute w-0.5 bg-gradient-to-r from-transparent via-gold/30 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute w-0.5 bg-gradient-to-r from-transparent via-gold/30 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
                       height: `${item.radius - 70}px`,
                       left: '50%',

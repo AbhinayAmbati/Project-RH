@@ -11,6 +11,14 @@ import Index from './pages/Index';
 import Profile from './pages/Profile';
 import Settings from './components/Settings';
 import Admin from '@/pages/Admin';
+import Architecture from './pages/products/Architecture';
+import Interiors from './pages/products/Interiors';
+import Automation from './pages/products/Automation';
+import Construction from './pages/products/Construction';
+import Kitchens from './pages/products/Kitchens';
+import Engineering from './pages/products/Engineering';
+import Lifts from './pages/products/Lifts';
+import Tiles from './pages/products/Tiles';
 
 // Protected route wrapper
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -110,6 +118,16 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
+          {/* Product Routes */}
+          <Route path="/products/architecture" element={<Architecture />} />
+          <Route path="/products/interiors" element={<Interiors />} />
+          <Route path="/products/automation" element={<Automation />} />
+          <Route path="/products/construction" element={<Construction />} />
+          <Route path="/products/kitchens" element={<Kitchens />} />
+          <Route path="/products/engineering" element={<Engineering />} />
+          <Route path="/products/lifts" element={<Lifts />} />
+          <Route path="/products/tiles" element={<Tiles />} />
 
           {/* Add more routes as needed */}
         </Routes>
