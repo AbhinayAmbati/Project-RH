@@ -5,10 +5,21 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, Filter, Edit2, X, Save } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { API_URL } from '@/config/api';
+import { useAuth } from '@/context/AuthContext';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const services = [
   { value: 'architecture', label: 'Architecture', icon: '🏛️' },
@@ -31,12 +42,22 @@ interface ProjectImage {
 }
 
 const ProjectImages = () => {
-  const [selectedService, setSelectedService] = useState<string>('');
+  const [selectedService, setSelectedService] = useState<string>('all');
   const [images, setImages] = useState<ProjectImage[]>([]);
+  const [filteredImages, setFilteredImages] = useState<ProjectImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<ProjectImage | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    title: '',
+    description: '',
+    service: ''
+  });
+  const { token } = useAuth();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -45,18 +66,30 @@ const ProjectImages = () => {
     image: null as File | null
   });
 
-  useEffect(() => {
-    if (selectedService) {
-      fetchImages(selectedService);
-    }
-  }, [selectedService]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [imageToDelete, setImageToDelete] = useState<ProjectImage | null>(null);
 
-  const fetchImages = async (service: string) => {
+  useEffect(() => {
+    fetchAllImages();
+  }, []);
+
+  useEffect(() => {
+    if (selectedService && selectedService !== 'all') {
+      setFilteredImages(images.filter(img => img.service === selectedService));
+    } else {
+      setFilteredImages(images);
+    }
+  }, [selectedService, images]);
+
+  const fetchAllImages = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/project-images/service/${service}`);
-      const data = await response.json();
-      setImages(data);
+      const promises = services.map(service => 
+        fetch(`${API_URL}/project-images/service/${service.value}`).then(res => res.json())
+      );
+      const results = await Promise.all(promises);
+      const allImages = results.flat();
+      setImages(allImages);
     } catch (error) {
       toast({
         title: 'Error',
@@ -65,6 +98,53 @@ const ProjectImages = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageClick = (image: ProjectImage) => {
+    setSelectedImage(image);
+    setEditForm({
+      title: image.title,
+      description: image.description,
+      service: image.service
+    });
+    setPreviewDialogOpen(true);
+    setIsEditing(false);
+  };
+
+  const handleEditSubmit = async () => {
+    if (!selectedImage) return;
+
+    try {
+      const response = await fetch(`${API_URL}/project-images/${selectedImage._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: JSON.stringify(editForm)
+      });
+
+      if (!response.ok) throw new Error('Update failed');
+
+      const updatedImage = await response.json();
+      setImages(images.map(img => 
+        img._id === selectedImage._id ? { ...img, ...editForm } : img
+      ));
+      setSelectedImage({ ...selectedImage, ...editForm });
+      setIsEditing(false);
+
+      toast({
+        title: 'Success',
+        description: 'Image details updated successfully'
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update image details',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -90,21 +170,24 @@ const ProjectImages = () => {
       const response = await fetch(`${API_URL}/project-images/upload`, {
         method: 'POST',
         body: formDataToSend,
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (!response.ok) throw new Error('Upload failed');
 
+      const newImage = await response.json();
+      
       toast({
         title: 'Success',
         description: 'Image uploaded successfully'
       });
 
-      setDialogOpen(false);
+      setUploadDialogOpen(false);
       setFormData({ title: '', description: '', service: '', image: null });
-      if (selectedService === formData.service) {
-        fetchImages(selectedService);
-      }
+      await fetchAllImages(); // Refresh all images
     } catch (error) {
       toast({
         title: 'Error',
@@ -116,13 +199,21 @@ const ProjectImages = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this image?')) return;
+  const handleDeleteClick = (image: ProjectImage) => {
+    setImageToDelete(image);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!imageToDelete) return;
 
     try {
-      const response = await fetch(`${API_URL}/project-images/${id}`, {
+      const response = await fetch(`${API_URL}/project-images/${imageToDelete._id}`, {
         method: 'DELETE',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (!response.ok) throw new Error('Delete failed');
@@ -132,7 +223,9 @@ const ProjectImages = () => {
         description: 'Image deleted successfully'
       });
 
-      setImages(images.filter(img => img._id !== id));
+      setImages(images.filter(img => img._id !== imageToDelete._id));
+      setDeleteDialogOpen(false);
+      setPreviewDialogOpen(false);
     } catch (error) {
       toast({
         title: 'Error',
@@ -142,11 +235,21 @@ const ProjectImages = () => {
     }
   };
 
+  const getServiceIcon = (serviceValue: string) => {
+    const service = services.find(s => s.value === serviceValue);
+    return service ? service.icon : '🖼️';
+  };
+
+  const getServiceLabel = (serviceValue: string) => {
+    const service = services.find(s => s.value === serviceValue);
+    return service ? service.label : serviceValue;
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">Project Images</h2>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-gold text-black hover:bg-gold/80">Upload New Image</Button>
           </DialogTrigger>
@@ -213,12 +316,17 @@ const ProjectImages = () => {
         </Dialog>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Filter className="h-5 w-5" />
+          <span className="text-sm text-gray-400">Filter by service:</span>
+        </div>
         <Select value={selectedService} onValueChange={setSelectedService}>
           <SelectTrigger className="w-[200px] bg-gold text-black hover:bg-gold/80">
-            <SelectValue placeholder="Select a service" />
+            <SelectValue placeholder="All Services" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="all">All Services</SelectItem>
             {services.map(service => (
               <SelectItem key={service.value} value={service.value}>
                 <span className="flex items-center gap-2">
@@ -234,30 +342,29 @@ const ProjectImages = () => {
         <div className="flex justify-center">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
-      ) : selectedService ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {images && images.length > 0 ? (
-            images.map(image => (
-              <Card key={image._id} className="overflow-hidden bg-[#111] border-gray-800">
-                <div className="aspect-video relative group">
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredImages && filteredImages.length > 0 ? (
+            filteredImages.map(image => (
+              <Card 
+                key={image._id} 
+                className="overflow-hidden bg-[#111] border-gray-800 hover:border-gold transition-all duration-300 cursor-pointer"
+                onClick={() => handleImageClick(image)}
+              >
+                <div className="aspect-square relative group">
                   <img
                     src={image.imageUrl}
                     alt={image.title}
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="p-4 text-white">
-                      <h3 className="font-semibold">{image.title}</h3>
-                      <p className="text-sm text-gray-300">{image.description}</p>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="mt-2"
-                        onClick={() => handleDelete(image._id)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </Button>
+                  <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span>{getServiceIcon(image.service)}</span>
+                        <span className="text-sm text-gold">{getServiceLabel(image.service)}</span>
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2">{image.title}</h3>
+                      <p className="text-sm text-gray-300 line-clamp-3">{image.description}</p>
                     </div>
                   </div>
                 </div>
@@ -265,15 +372,152 @@ const ProjectImages = () => {
             ))
           ) : (
             <div className="col-span-full text-center text-gray-400">
-              No images found for this service.
+              {selectedService !== 'all' ? 'No images found for this service.' : 'No images found.'}
             </div>
           )}
         </div>
-      ) : (
-        <div className="text-center text-gray-400">
-          Please select a service to view images.
-        </div>
       )}
+
+      {/* Image Preview/Edit Dialog */}
+      <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="text-black flex justify-between items-center">
+              <span>{isEditing ? 'Edit Image Details' : 'Image Preview'}</span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setPreviewDialogOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="aspect-square relative">
+              <img
+                src={selectedImage?.imageUrl}
+                alt={selectedImage?.title}
+                className="object-cover w-full h-full rounded-lg"
+              />
+            </div>
+            
+            <div className="space-y-4">
+              {isEditing ? (
+                <>
+                  <div>
+                    <Label htmlFor="edit-title">Title</Label>
+                    <Input
+                      id="edit-title"
+                      value={editForm.title}
+                      onChange={e => setEditForm(prev => ({ ...prev, title: e.target.value }))}
+                      className="bg-white text-black"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-description">Description</Label>
+                    <Textarea
+                      id="edit-description"
+                      value={editForm.description}
+                      onChange={e => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                      className="bg-white text-black min-h-[150px]"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-service">Service</Label>
+                    <Select
+                      value={editForm.service}
+                      onValueChange={value => setEditForm(prev => ({ ...prev, service: value }))}
+                    >
+                      <SelectTrigger className="bg-white text-black">
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {services.map(service => (
+                          <SelectItem key={service.value} value={service.value}>
+                            <span className="flex items-center gap-2">
+                              {service.icon} {service.label}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <Button
+                      onClick={handleEditSubmit}
+                      className="flex-1"
+                    >
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEditing(false)}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <h3 className="text-lg font-semibold text-black">{selectedImage?.title}</h3>
+                    <p className="text-sm text-gray-500">
+                      {getServiceIcon(selectedImage?.service || '')} {getServiceLabel(selectedImage?.service || '')}
+                    </p>
+                  </div>
+                  <p className="text-gray-600">{selectedImage?.description}</p>
+                  <div className="flex gap-2 pt-4 text-black">
+                    <Button
+                      onClick={() => setIsEditing(true)}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      <Edit2 className="h-4 w-4 mr-2" color='black'/>
+                      Edit Details
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => selectedImage && handleDeleteClick(selectedImage)}
+                      className="flex-1"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2"/>
+                      Delete Image
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to delete this image?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the image
+              "{imageToDelete?.title}" from the server.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)} className='text-black'>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

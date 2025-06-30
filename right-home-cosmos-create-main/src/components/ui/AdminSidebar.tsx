@@ -33,11 +33,6 @@ const AdminSidebar: React.FC = () => {
       icon: <Users className="h-5 w-5" />,
       path: '/admin/users',
     },
-    {
-      title: 'Settings',
-      icon: <Settings className="h-5 w-5" />,
-      path: '/admin/settings',
-    },
   ];
 
   return (

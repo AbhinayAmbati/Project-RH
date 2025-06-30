@@ -1,8 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
+import ImageGallery from '@/components/ui/image-gallery';
+import { API_URL } from '@/config/api';
+
+interface ProjectImage {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  service: string;
+  createdAt: string;
+}
 
 const Engineering = () => {
+  const [images, setImages] = useState<ProjectImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${API_URL}/project-images/service/engineering`);
+        const data = await response.json();
+        setImages(data);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
+  const galleryImages = images.map(image => ({
+    url: image.imageUrl,
+    title: image.title,
+    description: image.description
+  }));
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <Navigation />
@@ -88,6 +124,13 @@ const Engineering = () => {
             </div>
           </CardContent>
         </Card>
+
+        {!loading && galleryImages.length > 0 && (
+          <ImageGallery 
+            images={galleryImages} 
+            title="Our Engineering Projects" 
+          />
+        )}
       </div>
     </div>
   );
