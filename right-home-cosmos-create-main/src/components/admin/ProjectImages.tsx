@@ -455,7 +455,7 @@ const ProjectImages = () => {
                     <Button
                       variant="outline"
                       onClick={() => setIsEditing(false)}
-                      className="flex-1"
+                      className="flex-1 text-black"
                     >
                       Cancel
                     </Button>

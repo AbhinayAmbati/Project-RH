@@ -46,6 +46,33 @@ const projectImageController = {
     }
   },
 
+  updateImage: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title, description, service } = req.body;
+
+      const image = await ProjectImage.findById(id);
+      if (!image) {
+        return res.status(404).json({ message: 'Image not found' });
+      }
+
+      // Update the image details
+      image.title = title;
+      image.description = description;
+      image.service = service;
+
+      await image.save();
+
+      res.json({
+        message: 'Image updated successfully',
+        image
+      });
+    } catch (error) {
+      console.error('Error updating image:', error);
+      res.status(500).json({ message: 'Error updating image', error: error.message });
+    }
+  },
+
   getImagesByService: async (req, res) => {
     try {
       const { service } = req.params;

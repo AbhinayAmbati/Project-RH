@@ -131,7 +131,7 @@ const HeroSection = () => {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="absolute group cursor-pointer z-10 w-20 h-20"
+                  className="absolute group cursor-pointer z-10 w-20 h-20 "
                   style={{
                     left: '50%',
                     top: '50%',
@@ -155,8 +155,8 @@ const HeroSection = () => {
                       top: '50%',
                     }}
                   > 
-                  <div className="w-20 h-20 glass-effect rounded-2xl flex items-center justify-center group-hover:scale-125 transition-all duration-500 hover:bg-gold/20 shadow-xl">
-                    <div className="text-3xl group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-20 h-20 glass-effect rounded-2xl flex items-center justify-center group-hover:scale-125 transition-all duration-500 hover:bg-gold/20 shadow-xl ">
+                    <div className="text-3xl group-hover:scale-110 transition-transform duration-300 rotate-slow">
                       {item.icon}
                     </div>
                   </div>
@@ -168,17 +168,7 @@ const HeroSection = () => {
                     </div>
                   </div>
 
-                  {/* Connecting Lines */}
-                  <div 
-                    className="absolute w-0.5 bg-gradient-to-r from-transparent via-gold/30 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      height: `${item.radius - 70}px`,
-                      left: '50%',
-                      top: '50%',
-                      transform: 'translate(-50%, -100%)',
-                      transformOrigin: 'bottom center'
-                    }}
-                  />
+                  
                 </div>
               ))}
 
@@ -196,17 +186,7 @@ const HeroSection = () => {
                 />
               ))}
 
-              {/* Outer Ring */}
-              <div 
-                className="absolute inset-0 border border-gold/20 rounded-full animate-rotate-slow"
-                style={{
-                  width: '380px',
-                  height: '380px',
-                  left: '50%',
-                  top: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              />
+             
             </div>
           </div>
         </div>

@@ -62,4 +62,8 @@ router.delete('/:id', protect, function(req, res) {
   return imageController.deleteImage(req, res);
 });
 
+router.put('/:id', protect, function(req, res) {
+  return imageController.updateImage(req, res);
+});
+
 module.exports = router; 
