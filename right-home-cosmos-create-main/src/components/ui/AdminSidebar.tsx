@@ -6,6 +6,7 @@ import {
   Users,
   MessageSquare,
   Settings,
+  Image,
 } from 'lucide-react';
 
 const AdminSidebar: React.FC = () => {
@@ -16,6 +17,11 @@ const AdminSidebar: React.FC = () => {
       title: 'Dashboard',
       icon: <LayoutDashboard className="h-5 w-5" />,
       path: '/admin/dashboard',
+    },
+    {
+      title: 'Project Images',
+      icon: <Image className="h-5 w-5" />,
+      path: '/admin/project-images',
     },
     {
       title: 'Consultations',

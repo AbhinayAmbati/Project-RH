@@ -6,6 +6,7 @@ import AdminSidebar from '@/components/ui/AdminSidebar';
 import Dashboard from '@/components/admin/Dashboard';
 import Users from '@/components/admin/Users';
 import Consultations from '@/components/admin/Consultations';
+import ProjectImages from '@/components/admin/ProjectImages';
 
 const Admin: React.FC = () => {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ const Admin: React.FC = () => {
         <Routes>
           <Route path="/" element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="project-images" element={<ProjectImages />} />
           <Route path="users" element={<Users />} />
           <Route path="consultations" element={<Consultations />} />
         </Routes>

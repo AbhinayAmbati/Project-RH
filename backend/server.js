@@ -5,6 +5,16 @@ const connectDB = require("./config/dbConfig");
 const userRoutes = require("./routes/userRoutes");
 const consultationRoutes = require("./routes/consultationRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const projectImageRoutes = require('./routes/projectImageRoutes');
+
+// Debug logging
+console.log('Loading routes...');
+try {
+  const projectImageRoutes = require('./routes/projectImageRoutes');
+  console.log('Project image routes loaded successfully');
+} catch (error) {
+  console.error('Error loading project image routes:', error);
+}
 
 // Load environment variables
 dotenv.config();
@@ -33,6 +43,7 @@ app.use((req, res, next) => {
 app.use("/api/users", userRoutes);
 app.use("/api/consultations", consultationRoutes);
 app.use("/api/admin", adminRoutes);
+app.use('/api/project-images', projectImageRoutes);
 
 // Home route
 app.get("/", (req, res) => {

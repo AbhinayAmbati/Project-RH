@@ -1,42 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
+import { API_URL } from '@/config/api';
 
-const constructionImages = [
-  {
-    url: "/images/construction/project1.jpg",
-    title: "Modern Villa Project",
-    description: "Luxury 5-bedroom villa with contemporary design in premium location"
-  },
-  {
-    url: "/images/construction/project2.jpg",
-    title: "Commercial Complex",
-    description: "Multi-story commercial building with state-of-the-art facilities"
-  },
-  {
-    url: "/images/construction/project3.jpg",
-    title: "Residential Apartments",
-    description: "High-rise residential complex with modern amenities"
-  },
-  {
-    url: "/images/construction/project4.jpg",
-    title: "Industrial Warehouse",
-    description: "Large-scale industrial warehouse with advanced storage solutions"
-  },
-  {
-    url: "/images/construction/project5.jpg",
-    title: "Shopping Mall",
-    description: "Modern shopping mall with entertainment facilities"
-  },
-  {
-    url: "/images/construction/project6.jpg",
-    title: "Office Building",
-    description: "Corporate office building with sustainable design features"
-  }
-];
+interface ProjectImage {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  service: string;
+  createdAt: string;
+}
 
 const Construction = () => {
+  const [images, setImages] = useState<ProjectImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${API_URL}/project-images/service/construction`);
+        const data = await response.json();
+        setImages(data);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
+  const galleryImages = images.map(image => ({
+    url: image.imageUrl,
+    title: image.title,
+    description: image.description
+  }));
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <Navigation />
@@ -122,10 +124,12 @@ const Construction = () => {
           </CardContent>
         </Card>
 
-        <ImageGallery 
-          images={constructionImages} 
-          title="Our Construction Projects" 
-        />
+        {!loading && galleryImages.length > 0 && (
+          <ImageGallery 
+            images={galleryImages} 
+            title="Our Construction Projects" 
+          />
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, MessageSquare, CheckCircle, Clock } from 'lucide-react';
+import { Users as UsersIcon, MessageSquare, CheckCircle, Clock } from 'lucide-react';
 import { API_URL } from '@/config/api';
 import Cookies from 'js-cookie';
 
@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
         <Card className="bg-[#111] border-gray-800">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-400">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-blue-500" />
+            <UsersIcon className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{stats.totalUsers}</div>
