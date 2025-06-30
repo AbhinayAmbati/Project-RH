@@ -102,7 +102,14 @@ function App() {
             }
           />  
           <Route path='/' element={<Index />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route 
+            path="/admin/*" 
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            } 
+          />
 
           {/* Add more routes as needed */}
         </Routes>
