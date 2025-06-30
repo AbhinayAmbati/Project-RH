@@ -315,10 +315,32 @@ const logout = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
     try {
+        const user = await User.findById(req.user._id);
+        
+        // Check if user is an admin
+        if (user.role === 'admin') {
+            // Count total admins
+            const adminCount = await User.countDocuments({ role: 'admin' });
+            
+            // If this is the last admin, prevent deletion
+            if (adminCount === 1) {
+                return res.status(403).json({ 
+                    success: false,
+                    message: "Cannot delete account: You are the last administrator" 
+                });
+            }
+        }
+
         await User.findByIdAndDelete(req.user._id);
-        res.status(200).json({ message: "Account deleted successfully" });
+        res.status(200).json({ 
+            success: true,
+            message: "Account deleted successfully" 
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 
+            success: false,
+            message: error.message 
+        });
     }
 };
 

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Settings as SettingsIcon, CheckCircle } from 'lucide-react';
+import { Trash2, Settings as SettingsIcon, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { userApi } from '@/config/api';
 import Navigation from './Navigation';
@@ -46,6 +46,7 @@ const Settings: React.FC = () => {
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
   const [showProfileForm, setShowProfileForm] = useState(true);
   const [showPasswordForm, setShowPasswordForm] = useState(true);
+  const [showLastAdminDialog, setShowLastAdminDialog] = useState(false);
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -173,7 +174,13 @@ const Settings: React.FC = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete account';
       setError(errorMessage);
-      toast.error(errorMessage);
+      // Show the last admin dialog instead of toast if applicable
+      if (errorMessage.includes('last administrator')) {
+        setShowLastAdminDialog(true);
+        setShowDeleteConfirm(false);
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -210,6 +217,30 @@ const Settings: React.FC = () => {
             <Button
               onClick={handleCloseSuccessDialog}
               className="bg-green-600 text-white hover:bg-green-700 transition-colors"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Last Admin Dialog */}
+      <Dialog open={showLastAdminDialog} onOpenChange={setShowLastAdminDialog}>
+        <DialogContent className="bg-[#111] border-red-500/20">
+          <DialogHeader>
+            <DialogTitle className="text-red-400 flex items-center gap-2">
+              <AlertCircle className="w-5 h-5" />
+              Cannot Delete Account
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 text-base">
+              You cannot delete your account because you are the last administrator. 
+              Please assign another administrator before attempting to delete your account.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end mt-4">
+            <Button
+              onClick={() => setShowLastAdminDialog(false)}
+              className="bg-red-500/10 text-red-400 hover:bg-red-500/20"
             >
               Close
             </Button>
