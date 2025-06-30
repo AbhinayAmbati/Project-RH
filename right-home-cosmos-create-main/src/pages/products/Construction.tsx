@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
+import ContactSection from '@/components/ContactSection';
 
 interface ProjectImage {
   _id: string;
@@ -131,6 +132,7 @@ const Construction = () => {
           />
         )}
       </div>
+      <ContactSection />
     </div>
   );
 };

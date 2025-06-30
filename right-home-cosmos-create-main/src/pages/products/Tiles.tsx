@@ -3,28 +3,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
+import ContactSection from '@/components/ContactSection';
 
-interface ProjectImage {
-  _id: string;
+interface Image {
+  url: string;
   title: string;
   description: string;
-  imageUrl: string;
-  service: string;
-  createdAt: string;
 }
 
 const Tiles = () => {
-  const [images, setImages] = useState<ProjectImage[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
         const response = await fetch(`${API_URL}/project-images/service/tiles`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch images');
+        }
         const data = await response.json();
         setImages(data);
-      } catch (error) {
-        console.error('Error fetching images:', error);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch images');
       } finally {
         setLoading(false);
       }
@@ -33,104 +35,33 @@ const Tiles = () => {
     fetchImages();
   }, []);
 
-  const galleryImages = images.map(image => ({
-    url: image.imageUrl,
-    title: image.title,
-    description: image.description
-  }));
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
-      <Navigation />
-      <div className="container mx-auto px-4 py-20">
-        <h1 className="text-4xl font-bold text-white mb-8 mt-8 flex items-center gap-3">
-          <span className="text-3xl">🚿</span>
-          Tile Solutions
+    <div className="min-h-screen bg-space-dark text-white">
+      <div className="container-max py-12">
+        <h1 className="text-4xl md:text-5xl font-bold mb-8">
+          Premium <span className="text-gradient">Tiles</span>
         </h1>
-        
-        <div className="grid gap-8 md:grid-cols-2">
-          <Card className="bg-[#111] border-gray-800">
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold text-white mb-4">Our Tile Expertise</h2>
-              <p className="text-gray-400 mb-4">
-                Transform your spaces with our premium tile solutions. We offer a wide range of tiles 
-                and expert installation services to create stunning, durable surfaces for any area of your home.
-              </p>
-              <ul className="list-disc list-inside text-gray-400 space-y-2">
-                <li>Ceramic Tiles</li>
-                <li>Porcelain Tiles</li>
-                <li>Natural Stone</li>
-                <li>Mosaic Designs</li>
-                <li>Custom Patterns</li>
-                <li>Waterproofing Solutions</li>
-              </ul>
-            </CardContent>
-          </Card>
+        <p className="text-xl text-gray-300 mb-12 max-w-4xl">
+          Explore our collection of premium tiles that add elegance to any space. 
+          From classic designs to modern patterns, we offer tiles that transform floors and walls.
+        </p>
 
-          <Card className="bg-[#111] border-gray-800">
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold text-white mb-4">Why Choose Our Tile Services</h2>
-              <ul className="space-y-4 text-gray-400">
-                <li className="flex items-start">
-                  <span className="mr-2">🎨</span>
-                  <span>Wide selection of designs</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">💪</span>
-                  <span>Expert installation team</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">✨</span>
-                  <span>Premium quality materials</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">🛡️</span>
-                  <span>Long-lasting durability</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">💫</span>
-                  <span>Perfect finishing touches</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="mt-8 bg-[#111] border-gray-800">
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4">Our Installation Process</h2>
-            <div className="grid md:grid-cols-4 gap-4">
-              <div className="text-center p-4">
-                <div className="text-3xl mb-2">🎯</div>
-                <h3 className="text-white font-semibold mb-2">Consultation</h3>
-                <p className="text-gray-400 text-sm">Design selection and space assessment</p>
-              </div>
-              <div className="text-center p-4">
-                <div className="text-3xl mb-2">📏</div>
-                <h3 className="text-white font-semibold mb-2">Planning</h3>
-                <p className="text-gray-400 text-sm">Layout design and material preparation</p>
-              </div>
-              <div className="text-center p-4">
-                <div className="text-3xl mb-2">🔨</div>
-                <h3 className="text-white font-semibold mb-2">Installation</h3>
-                <p className="text-gray-400 text-sm">Professional tile setting and grouting</p>
-              </div>
-              <div className="text-center p-4">
-                <div className="text-3xl mb-2">✨</div>
-                <h3 className="text-white font-semibold mb-2">Finishing</h3>
-                <p className="text-gray-400 text-sm">Final touches and quality inspection</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {!loading && galleryImages.length > 0 && (
-          <ImageGallery 
-            images={galleryImages} 
-            title="Our Tile Projects" 
-          />
+        {images.length > 0 ? (
+          <ImageGallery images={images} title="Our Tile Projects" />
+        ) : (
+          <p className="text-gray-400">No images available at the moment.</p>
         )}
       </div>
+      
+      <ContactSection />
     </div>
   );
 };

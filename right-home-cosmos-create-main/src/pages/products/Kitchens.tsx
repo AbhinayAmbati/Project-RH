@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
+import ContactSection from '@/components/ContactSection';
 
 interface ProjectImage {
   _id: string;
@@ -16,15 +17,19 @@ interface ProjectImage {
 const Kitchens = () => {
   const [images, setImages] = useState<ProjectImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
         const response = await fetch(`${API_URL}/project-images/service/kitchens`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch images');
+        }
         const data = await response.json();
         setImages(data);
-      } catch (error) {
-        console.error('Error fetching images:', error);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch images');
       } finally {
         setLoading(false);
       }
@@ -38,6 +43,14 @@ const Kitchens = () => {
     title: image.title,
     description: image.description
   }));
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
@@ -131,6 +144,8 @@ const Kitchens = () => {
           />
         )}
       </div>
+      
+      <ContactSection />
     </div>
   );
 };

@@ -5,17 +5,85 @@ const bcrypt = require('bcrypt');
 // Get admin dashboard stats
 const getStats = async (req, res) => {
     try {
+        // Get current date and date 6 months ago
+        const now = new Date();
+        const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
         const [
             totalUsers,
             totalConsultations,
             pendingConsultations,
-            completedConsultations
+            completedConsultations,
+            monthlyConsultations,
+            monthlyUsers
         ] = await Promise.all([
             User.countDocuments(),
             Consultation.countDocuments(),
             Consultation.countDocuments({ status: 'pending' }),
-            Consultation.countDocuments({ status: 'completed' })
+            Consultation.countDocuments({ status: 'completed' }),
+            Consultation.aggregate([
+                {
+                    $match: {
+                        createdAt: { $gte: sixMonthsAgo }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$createdAt" },
+                            month: { $month: "$createdAt" }
+                        },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { "_id.year": 1, "_id.month": 1 }
+                }
+            ]),
+            User.aggregate([
+                {
+                    $match: {
+                        createdAt: { $gte: sixMonthsAgo }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$createdAt" },
+                            month: { $month: "$createdAt" }
+                        },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { "_id.year": 1, "_id.month": 1 }
+                }
+            ])
         ]);
+
+        // Process monthly stats
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthlyStats = [];
+
+        // Initialize monthly stats for the last 6 months
+        for (let i = 0; i < 6; i++) {
+            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+            
+            const consultationData = monthlyConsultations.find(
+                item => item._id.year === date.getFullYear() && item._id.month === (date.getMonth() + 1)
+            );
+            
+            const userData = monthlyUsers.find(
+                item => item._id.year === date.getFullYear() && item._id.month === (date.getMonth() + 1)
+            );
+
+            monthlyStats.unshift({
+                month: monthNames[date.getMonth()],
+                consultations: consultationData?.count || 0,
+                users: userData?.count || 0
+            });
+        }
 
         res.status(200).json({
             success: true,
@@ -23,7 +91,8 @@ const getStats = async (req, res) => {
                 totalUsers,
                 totalConsultations,
                 pendingConsultations,
-                completedConsultations
+                completedConsultations,
+                monthlyStats
             }
         });
     } catch (error) {
