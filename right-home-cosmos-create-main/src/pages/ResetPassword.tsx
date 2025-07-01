@@ -58,17 +58,21 @@ export default function ResetPassword() {
 
       toast.success('Password reset successful! You can now login with your new password.', {
         duration: 5000,
+        className: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
+        style: { backgroundColor: 'rgba(34, 197, 94, 0.1)', color: '#4ade80', borderColor: 'rgba(34, 197, 94, 0.2)' }
       });
 
       // Redirect to login page after a short delay
       setTimeout(() => {
         navigate('/login');
       }, 2000);
+      
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to reset password';
       setError(errorMessage);
       toast.error(errorMessage, {
         duration: 5000,
+        className: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
       });
     } finally {
       setIsLoading(false);

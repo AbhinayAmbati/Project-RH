@@ -7,7 +7,7 @@ router.post("/register", registerUser);
 router.post("/verify-email", verifyEmail);
 router.post("/verify-email-change", verifyEmailChange);
 router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", protect, resetPassword);
+router.post("/reset-password", resetPassword);
 router.post("/change-password", protect, changePassword);
 router.post("/logout", protect, logout);
 router.post("/delete-account", protect, deleteAccount);

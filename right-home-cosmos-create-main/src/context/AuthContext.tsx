@@ -11,12 +11,18 @@ interface User {
   role: 'user' | 'admin';
 }
 
+interface ApiResponse {
+  success: boolean;
+  message?: string;
+  data?: any;
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (userData: RegisterData) => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<ApiResponse>;
   logout: () => void;
   isLoading: boolean;
   error: string | null;
@@ -169,6 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setError(null);
+      return response;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 
         'Unable to connect to the server. Please check your internet connection and try again.';
