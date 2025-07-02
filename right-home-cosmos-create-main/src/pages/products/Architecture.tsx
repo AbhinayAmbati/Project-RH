@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
-import ContactSection from '@/components/ContactSection';
+import { BookConsultation } from '@/components/ui/book-consultation';
 
 interface ProjectImage {
   _id: string;
@@ -46,6 +46,15 @@ const Architecture = () => {
     subService: image.subService
   }));
 
+  const architectureFeatures = [
+    'Architectural design consultation',
+    'Project feasibility analysis',
+    'Design concept discussion',
+    '3D visualization review',
+    'Budget estimation',
+    'Timeline planning'
+  ];
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -58,53 +67,84 @@ const Architecture = () => {
     <div className="min-h-screen bg-[#0A0A0A]">
       <Navigation />
       <div className="container mx-auto px-4 py-20">
+        <BookConsultation
+          service="Architecture"
+          description="Start your architectural journey with a professional consultation. Our experts will help bring your vision to life."
+          features={architectureFeatures}
+          className="mb-12"
+        />
+
         <h1 className="text-4xl font-bold text-white mb-8 mt-8 flex items-center gap-3">
           <span className="text-3xl">🏛️</span>
           Architecture Services
         </h1>
+
+        <Card className="bg-[#111] border-gray-800 mb-8">
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-semibold text-white mb-4">Welcome to Right Home Architecture</h2>
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              At Right Home, we know that a strong design is the backbone of any great home or office. 
+              That's why we have brought together an extraordinary team of architects and designers from around the world. 
+              Our experts come from diverse backgrounds, each bringing a unique sense of creativity, experience, and technical skill.
+            </p>
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              Whether you want a modern minimalist look, a traditional Indian home, or a luxurious office space, 
+              our team knows how to make it happen. We believe in listening first — understanding your needs, 
+              your lifestyle, and your dreams.
+            </p>
+          </CardContent>
+        </Card>
         
         <div className="grid gap-8 md:grid-cols-2">
           <Card className="bg-[#111] border-gray-800">
             <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold text-white mb-4">Our Architectural Expertise</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">Architectural Excellence</h2>
               <p className="text-gray-400 mb-4">
-                We specialize in creating innovative and sustainable architectural designs that blend 
-                functionality with aesthetic excellence. Our team of experienced architects works 
-                closely with clients to bring their vision to life.
+                Our architects are dedicated to creating innovative and sustainable solutions that transform your vision into reality.
               </p>
-              <ul className="list-disc list-inside text-gray-400 space-y-2">
-                <li>Custom Home Design</li>
-                <li>Commercial Architecture</li>
-                <li>Renovation Planning</li>
-                <li>Sustainable Design Solutions</li>
-                <li>3D Visualization</li>
+              <ul className="space-y-3">
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">📐</span>
+                  <span>Smart space planning</span>
+                </li>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">🌱</span>
+                  <span>Eco-friendly designs</span>
+                </li>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">🏗️</span>
+                  <span>Unique structural layouts</span>
+                </li>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">💰</span>
+                  <span>Cost-effective building methods</span>
+                </li>
               </ul>
             </CardContent>
           </Card>
 
           <Card className="bg-[#111] border-gray-800">
             <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold text-white mb-4">Why Choose Our Architecture Services</h2>
-              <ul className="space-y-4 text-gray-400">
-                <li className="flex items-start">
-                  <span className="mr-2">🎯</span>
-                  <span>Expert team with years of industry experience</span>
+              <h2 className="text-2xl font-semibold text-white mb-4">Design Mastery</h2>
+              <p className="text-gray-400 mb-4">
+                Our designers focus on creating spaces that are both beautiful and functional, ensuring every detail serves a purpose.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">✨</span>
+                  <span>Aesthetic beauty</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="mr-2">🌱</span>
-                  <span>Focus on sustainable and eco-friendly designs</span>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">🎨</span>
+                  <span>Color themes and materials</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="mr-2">💡</span>
-                  <span>Innovative solutions for complex architectural challenges</span>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">⚡</span>
+                  <span>Functionality in every space</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="mr-2">🤝</span>
-                  <span>Collaborative approach with clients</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">📋</span>
-                  <span>Comprehensive project management</span>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">🔄</span>
+                  <span>Harmonious interiors and exteriors</span>
                 </li>
               </ul>
             </CardContent>
@@ -113,29 +153,39 @@ const Architecture = () => {
 
         <Card className="mt-8 bg-[#111] border-gray-800">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4">Our Process</h2>
+            <h2 className="text-2xl font-semibold text-white mb-4">Our Design Journey</h2>
             <div className="grid md:grid-cols-4 gap-4">
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">📝</div>
-                <h3 className="text-white font-semibold mb-2">Consultation</h3>
-                <p className="text-gray-400 text-sm">Initial meeting to understand your vision and requirements</p>
+                <div className="text-3xl mb-2">👂</div>
+                <h3 className="text-white font-semibold mb-2">Listen</h3>
+                <p className="text-gray-400 text-sm">Understanding your needs, lifestyle, and dreams</p>
               </div>
               <div className="text-center p-4">
                 <div className="text-3xl mb-2">✏️</div>
                 <h3 className="text-white font-semibold mb-2">Design</h3>
-                <p className="text-gray-400 text-sm">Creating detailed architectural plans and 3D visualizations</p>
+                <p className="text-gray-400 text-sm">Creating initial sketches and concepts</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">📋</div>
-                <h3 className="text-white font-semibold mb-2">Development</h3>
-                <p className="text-gray-400 text-sm">Refining designs and obtaining necessary approvals</p>
+                <div className="text-3xl mb-2">💻</div>
+                <h3 className="text-white font-semibold mb-2">Visualize</h3>
+                <p className="text-gray-400 text-sm">3D rendering with latest software</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">🏗️</div>
-                <h3 className="text-white font-semibold mb-2">Execution</h3>
-                <p className="text-gray-400 text-sm">Overseeing construction and project completion</p>
+                <div className="text-3xl mb-2">🎯</div>
+                <h3 className="text-white font-semibold mb-2">Execute</h3>
+                <p className="text-gray-400 text-sm">Bringing your vision to life</p>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mt-8 bg-[#111] border-gray-800">
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-semibold text-white mb-4">Our Promise</h2>
+            <p className="text-gray-400 text-center text-lg italic">
+              "At Right Home, we're not just building walls and roofs. We're shaping lifestyles.
+              When great ideas meet great design, magic happens — and that's exactly what we promise you."
+            </p>
           </CardContent>
         </Card>
 
@@ -147,8 +197,6 @@ const Architecture = () => {
           />
         )}
       </div>
-      
-      <ContactSection />
     </div>
   );
 };

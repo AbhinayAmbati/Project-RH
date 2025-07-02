@@ -41,7 +41,7 @@ const AboutSection = () => {
               
               <p className="text-lg leading-relaxed">
                 Our unique proposition lies in <span className="text-blue-accent font-semibold">simplifying space creation through centralization</span> — 
-                bringing together architecture, interior design, smart automation, construction, and project management under one roof.
+                bringing together architecture, interior design, furniture, construction, and project management under one roof.
               </p>
               
               <p className="text-lg leading-relaxed">

@@ -24,7 +24,7 @@ import {
 const services = [
   { value: 'architecture', label: 'Architecture', icon: '🏛️' },
   { value: 'interiors', label: 'Interiors', icon: '🪑' },
-  { value: 'automation', label: 'Automation', icon: '🤖' },
+  { value: 'furniture', label: 'Furniture', icon: '🛋️' },
   { value: 'construction', label: 'Construction', icon: '🏗️' },
   { value: 'kitchens', label: 'Kitchens', icon: '🍽️' },
   { value: 'engineering', label: 'Engineering', icon: '⚙️' },

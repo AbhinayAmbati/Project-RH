@@ -70,7 +70,7 @@ const HeroSection = () => {
             
             <p className="text-base text-gray-400 mb-8 max-w-lg">
               One-stop destination for space creation — from concept to completion. 
-              Architecture, interiors, smart automation, construction, and end-to-end support.
+              Architecture, interiors, furniture, construction, and end-to-end support.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
@@ -122,7 +122,7 @@ const HeroSection = () => {
               {[
                 { service: 'Architecture', icon: '🏛️', angle: 0, radius: 150, path: '/products/architecture' },
                 { service: 'Interiors', icon: '🪑', angle: 45, radius: 160, path: '/products/interiors' },
-                { service: 'Automation', icon: '🤖', angle: 90, radius: 155, path: '/products/automation' },
+                { service: 'Furniture', icon: '🛋️', angle: 90, radius: 155, path: '/products/furniture' },
                 { service: 'Construction', icon: '🏗️', angle: 135, radius: 145, path: '/products/construction' },
                 { service: 'Kitchens', icon: '🍽️', angle: 180, radius: 165, path: '/products/kitchens' },
                 { service: 'Engineering', icon: '⚙️', angle: 225, radius: 150, path: '/products/engineering' },
@@ -131,7 +131,7 @@ const HeroSection = () => {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="absolute group cursor-pointer z-10 w-20 h-20 "
+                  className="absolute group cursor-pointer z-10 w-20 h-20"
                   style={{
                     left: '50%',
                     top: '50%',

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
-import ContactSection from '@/components/ContactSection';
+import { BookConsultation } from '@/components/ui/book-consultation';
 
 interface ProjectImage {
   _id: string;
@@ -46,10 +46,26 @@ const Engineering = () => {
     subService: image.subService
   }));
 
+  const engineeringFeatures = [
+    'Technical consultation',
+    'System design review',
+    'Engineering analysis',
+    'Performance optimization',
+    'Safety assessment',
+    'Compliance review'
+  ];
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <Navigation />
       <div className="container mx-auto px-4 py-20">
+        <BookConsultation
+          service="Engineering"
+          description="Consult with our engineering experts to ensure your project meets the highest technical standards and specifications."
+          features={engineeringFeatures}
+          className="mb-12"
+        />
+
         <h1 className="text-4xl font-bold text-white mb-8 mt-8 flex items-center gap-3">
           <span className="text-3xl">⚙️</span>
           Engineering Services

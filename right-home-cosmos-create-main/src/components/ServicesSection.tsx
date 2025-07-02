@@ -14,9 +14,9 @@ const ServicesSection = () => {
       features: ["Structural Design", "3D Modeling", "Building Permits", "Site Planning"]
     },
     {
-      title: "Interior Design & Furniture",
+      title: "Interior Design",
       description: "Bespoke interior solutions that reflect your personality and lifestyle",
-      icon: "🎨",
+      icon: "🛋️",
       features: ["Space Planning", "Custom Furniture", "Color Consultation", "Lighting Design"]
     },
     {
@@ -26,10 +26,10 @@ const ServicesSection = () => {
       features: ["Custom Cabinetry", "Smart Storage", "Premium Materials", "Ergonomic Design"]
     },
     {
-      title: "Smart Home Automation",
+      title: "Furniture",
       description: "Cutting-edge technology integration for intelligent living",
-      icon: "🤖",
-      features: ["IoT Integration", "Voice Control", "Security Systems", "Energy Management"]
+      icon: "🛋️",
+      features: ["Custom Furniture", "Space Planning", "Color Consultation", "Lighting Design"]
     },
     {
       title: "Structural Engineering",

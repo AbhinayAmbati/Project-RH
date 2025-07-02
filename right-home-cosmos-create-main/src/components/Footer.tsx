@@ -47,7 +47,7 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-400">
               <li className="hover:text-gold transition-colors cursor-pointer">Architecture & Planning</li>
               <li className="hover:text-gold transition-colors cursor-pointer">Interior Design</li>
-              <li className="hover:text-gold transition-colors cursor-pointer">Smart Automation</li>
+              <li className="hover:text-gold transition-colors cursor-pointer">Furniture</li>
               <li className="hover:text-gold transition-colors cursor-pointer">Project Management</li>
               <li className="hover:text-gold transition-colors cursor-pointer">YATRA Lifts</li>
               <li className="hover:text-gold transition-colors cursor-pointer">AVANI Tiles</li>

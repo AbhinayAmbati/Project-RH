@@ -19,9 +19,9 @@ const WalkthroughSection = () => {
       visual: "📐"
     },
     {
-      title: "Smart Integration",
-      description: "Planning automation systems and smart home features",
-      visual: "🏠"
+      title: "Furniture",
+      description: "Planning furniture systems and smart home features",
+      visual: "🛋️"
     },
     {
       title: "Construction Phase",

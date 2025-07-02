@@ -20,7 +20,7 @@ const projectImageSchema = new mongoose.Schema({
   service: {
     type: String,
     required: true,
-    enum: ['architecture', 'interiors', 'automation', 'construction', 'kitchens', 'engineering', 'lifts', 'tiles']
+    enum: ['architecture', 'interiors', 'furniture', 'construction', 'kitchens', 'engineering', 'lifts', 'tiles']
   },
   subService: {
     type: String,

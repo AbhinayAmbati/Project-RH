@@ -15,7 +15,7 @@ interface ProjectImage {
   createdAt: string;
 }
 
-const Tiles = () => {
+const Furniture = () => {
   const [images, setImages] = useState<ProjectImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ const Tiles = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch(`${API_URL}/project-images/service/tiles`);
+        const response = await fetch(`${API_URL}/project-images/service/furniture`);
         if (!response.ok) {
           throw new Error('Failed to fetch images');
         }
@@ -46,15 +46,6 @@ const Tiles = () => {
     subService: image.subService
   }));
 
-  const tileFeatures = [
-    'Material selection',
-    'Pattern design',
-    'Color coordination',
-    'Installation planning',
-    'Maintenance guidance',
-    'Cost estimation'
-  ];
-
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -63,68 +54,72 @@ const Tiles = () => {
     return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
   }
 
+  const furnitureFeatures = [
+    'Custom design consultation',
+    'Material selection',
+    'Style and finish options',
+    'Space planning',
+    'Budget optimization',
+    'Delivery planning'
+  ];
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <Navigation />
       <div className="container mx-auto px-4 py-20">
         <BookConsultation
-          service="Tile Selection"
-          description="Choose the perfect tiles for your space with expert guidance. We'll help you select the right materials, patterns, and colors."
-          features={tileFeatures}
+          service="Furniture"
+          description="Explore custom furniture solutions with our experts. We'll help you choose the perfect pieces for your space."
+          features={furnitureFeatures}
           className="mb-12"
         />
 
         <h1 className="text-4xl font-bold text-white mb-8 mt-8 flex items-center gap-3">
-          <span className="text-3xl">🏷️</span>
-          Premium Tiles Collection
+          <span className="text-3xl">🛋️</span>
+          Artistic Furniture
         </h1>
 
         <Card className="bg-[#111] border-gray-800 mb-8">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4">Tiles That Set the Tone of Your Space</h2>
+            <h2 className="text-2xl font-semibold text-white mb-4">Comfort with Character</h2>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Tiles are not just for covering floors and walls — they define the mood, feel, and look of your space. 
-              At Right Home, we offer a wide and exciting range of tiles that cater to all types of homes and offices.
+              Furniture is not just something you use — it's something that brings your space to life. 
+              At Right Home, we offer a wide range of artistic and functional furniture for homes and offices.
             </p>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Whether you're looking for classy whites, bold colors, or natural stone textures, you'll find a match with us. 
-              Our tiles come in various sizes and finishes to fit all spaces — from small apartments to luxury villas, 
-              from workspaces to showrooms.
+              Looking for a luxurious center table or a cozy reading chair? Want a customized modular 
+              kitchen setup or ergonomic office seating? We've got it all.
             </p>
           </CardContent>
         </Card>
-
+        
         <div className="grid gap-8 md:grid-cols-2">
           <Card className="bg-[#111] border-gray-800">
             <CardContent className="p-6">
               <h2 className="text-2xl font-semibold text-white mb-4">Our Collection</h2>
               <p className="text-gray-400 mb-4">
-                Explore our comprehensive range of tiles for every space and purpose.
+                Explore our comprehensive range of furniture for every space.
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🏠</span>
-                  <span>Floor tiles</span>
+                  <span className="mr-3">🛋️</span>
+                  <span>Sofas and sectionals</span>
                 </li>
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🧱</span>
-                  <span>Wall tiles</span>
+                  <span className="mr-3">🛏️</span>
+                  <span>Beds and wardrobes</span>
                 </li>
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🛁</span>
-                  <span>Bathroom tiles</span>
+                  <span className="mr-3">🪑</span>
+                  <span>Dining tables and chairs</span>
                 </li>
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🍳</span>
-                  <span>Kitchen tiles</span>
+                  <span className="mr-3">💼</span>
+                  <span>Office desks and workstations</span>
                 </li>
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🌳</span>
-                  <span>Outdoor and parking tiles</span>
-                </li>
-                <li className="flex items-start text-gray-400">
-                  <span className="mr-3">✨</span>
-                  <span>Designer and feature wall tiles</span>
+                  <span className="mr-3">🏢</span>
+                  <span>Lounge and reception furniture</span>
                 </li>
               </ul>
             </CardContent>
@@ -132,26 +127,30 @@ const Tiles = () => {
 
           <Card className="bg-[#111] border-gray-800">
             <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold text-white mb-4">Finishes & Textures</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">Design Styles</h2>
               <p className="text-gray-400 mb-4">
-                Choose from our diverse range of finishes to match your style and preferences.
+                Choose from a variety of styles to match your aesthetic preferences.
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">💎</span>
-                  <span>Marble finish</span>
+                  <span className="mr-3">🎯</span>
+                  <span>Modern</span>
                 </li>
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🪵</span>
-                  <span>Wooden finish</span>
+                  <span className="mr-3">👑</span>
+                  <span>Classic</span>
                 </li>
                 <li className="flex items-start text-gray-400">
                   <span className="mr-3">✨</span>
-                  <span>Glossy and matte textures</span>
+                  <span>Minimalist</span>
                 </li>
                 <li className="flex items-start text-gray-400">
-                  <span className="mr-3">🎨</span>
-                  <span>Traditional and modern patterns</span>
+                  <span className="mr-3">🌳</span>
+                  <span>Rustic</span>
+                </li>
+                <li className="flex items-start text-gray-400">
+                  <span className="mr-3">💎</span>
+                  <span>Luxury designer pieces</span>
                 </li>
               </ul>
             </CardContent>
@@ -160,27 +159,27 @@ const Tiles = () => {
 
         <Card className="mt-8 bg-[#111] border-gray-800">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4">Quality Assurance</h2>
+            <h2 className="text-2xl font-semibold text-white mb-4">The Right Home Difference</h2>
             <div className="grid md:grid-cols-4 gap-4">
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">💪</div>
-                <h3 className="text-white font-semibold mb-2">Durable</h3>
-                <p className="text-gray-400 text-sm">Built to last and maintain beauty</p>
+                <div className="text-3xl mb-2">🏆</div>
+                <h3 className="text-white font-semibold mb-2">Quality</h3>
+                <p className="text-gray-400 text-sm">High-quality materials</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">🧹</div>
-                <h3 className="text-white font-semibold mb-2">Easy to Clean</h3>
-                <p className="text-gray-400 text-sm">Simple maintenance for busy lives</p>
+                <div className="text-3xl mb-2">⚒️</div>
+                <h3 className="text-white font-semibold mb-2">Craftsmanship</h3>
+                <p className="text-gray-400 text-sm">Expert craftsmanship in every piece</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">💧</div>
-                <h3 className="text-white font-semibold mb-2">Resistant</h3>
-                <p className="text-gray-400 text-sm">Stain and water resistant</p>
+                <div className="text-3xl mb-2">🎨</div>
+                <h3 className="text-white font-semibold mb-2">Design</h3>
+                <p className="text-gray-400 text-sm">Unique and distinctive designs</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">💰</div>
-                <h3 className="text-white font-semibold mb-2">Flexible Range</h3>
-                <p className="text-gray-400 text-sm">Budget-friendly to premium options</p>
+                <div className="text-3xl mb-2">☁️</div>
+                <h3 className="text-white font-semibold mb-2">Comfort</h3>
+                <p className="text-gray-400 text-sm">Long-lasting comfort and durability</p>
               </div>
             </div>
           </CardContent>
@@ -188,22 +187,27 @@ const Tiles = () => {
 
         <Card className="mt-8 bg-[#111] border-gray-800">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4">Expert Guidance</h2>
-            <p className="text-gray-400 mb-4">
-              Our dedicated team is here to help you choose the right tiles based on your:
-            </p>
-            <div className="grid md:grid-cols-3 gap-4">
+            <h2 className="text-2xl font-semibold text-white mb-4">Our Process</h2>
+            <div className="grid md:grid-cols-4 gap-4">
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">📐</div>
-                <h3 className="text-white font-semibold">Space</h3>
+                <div className="text-3xl mb-2">👋</div>
+                <h3 className="text-white font-semibold mb-2">Consultation</h3>
+                <p className="text-gray-400 text-sm">Understanding your style and needs</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">💡</div>
-                <h3 className="text-white font-semibold">Lighting</h3>
+                <div className="text-3xl mb-2">✏️</div>
+                <h3 className="text-white font-semibold mb-2">Selection</h3>
+                <p className="text-gray-400 text-sm">Choosing the perfect pieces</p>
               </div>
               <div className="text-center p-4">
-                <div className="text-3xl mb-2">👥</div>
-                <h3 className="text-white font-semibold">Usage</h3>
+                <div className="text-3xl mb-2">🛠️</div>
+                <h3 className="text-white font-semibold mb-2">Customization</h3>
+                <p className="text-gray-400 text-sm">Tailoring to your specifications</p>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-3xl mb-2">✨</div>
+                <h3 className="text-white font-semibold mb-2">Delivery</h3>
+                <p className="text-gray-400 text-sm">Professional installation and setup</p>
               </div>
             </div>
           </CardContent>
@@ -213,8 +217,8 @@ const Tiles = () => {
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold text-white mb-4">Our Promise</h2>
             <p className="text-gray-400 text-center text-lg italic">
-              "At Right Home, we believe good flooring is the foundation of a beautiful space. 
-              Let your floors, walls, and surroundings speak the language of elegance — only with Right Home's exclusive tile collection."
+              "With Right Home furniture, every room becomes more inviting, more stylish, and more complete. 
+              Because true comfort is not just how it feels — it's also how it looks."
             </p>
           </CardContent>
         </Card>
@@ -222,7 +226,7 @@ const Tiles = () => {
         {!loading && galleryImages.length > 0 && (
           <ImageGallery 
             images={galleryImages} 
-            title="Our Tile Projects"
+            title="Our Furniture Collection"
             groupBySubService={true}
           />
         )}
@@ -231,4 +235,4 @@ const Tiles = () => {
   );
 };
 
-export default Tiles;
+export default Furniture; 
