@@ -114,7 +114,7 @@ const HeroSection = () => {
               {/* Main central element */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-40 h-40 bg-gold-gradient rounded-full flex items-center justify-center animate-pulse shadow-2xl">
-                  <span className="text-space-dark font-bold text-2xl">RH</span>
+                  <img src="/images/logo2.png" alt="Right Home Logo" className="w-40 h-40 object-contain" />
                 </div>
               </div>
 

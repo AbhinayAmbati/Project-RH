@@ -46,14 +46,6 @@ export default function Login() {
     <AuthLayout>
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-2">
-              Welcome to <span className="text-gold">RightHome</span>
-            </h1>
-            <p className="text-gray-400">Sign in to your account</p>
-          </div>
-
           {/* Login Form */}
           <div className="bg-[#111] rounded-lg p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
