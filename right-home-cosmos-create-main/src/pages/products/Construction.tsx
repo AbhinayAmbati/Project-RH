@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
 import { BookConsultation } from '@/components/ui/book-consultation';
+import { Loading } from '@/components/ui/loading';
 
 interface ProjectImage {
   _id: string;
@@ -18,6 +19,7 @@ interface ProjectImage {
 const Construction = () => {
   const [images, setImages] = useState<ProjectImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -27,6 +29,7 @@ const Construction = () => {
         setImages(data);
       } catch (error) {
         console.error('Error fetching images:', error);
+        setError('Failed to fetch construction images.');
       } finally {
         setLoading(false);
       }
@@ -34,6 +37,10 @@ const Construction = () => {
 
     fetchImages();
   }, []);
+
+  if (error) {
+    return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+  }
 
   const galleryImages = images.map(image => ({
     url: image.imageUrl,
@@ -53,6 +60,7 @@ const Construction = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
+      <Loading loading={loading} />
       <Navigation />
       <div className="container mx-auto px-4 py-20">
         <BookConsultation

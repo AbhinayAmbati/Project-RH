@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation';
 import ImageGallery from '@/components/ui/image-gallery';
 import { API_URL } from '@/config/api';
 import { BookConsultation } from '@/components/ui/book-consultation';
+import { Loading } from '@/components/ui/loading';
 
 interface ProjectImage {
   _id: string;
@@ -65,6 +66,7 @@ const Kitchens = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
+      <Loading loading={loading} />
       <Navigation />
       <div className="container mx-auto px-4 py-20">
         <BookConsultation

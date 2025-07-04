@@ -40,8 +40,8 @@ const Navigation = () => {
       <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6">
         {/* Logo - Always Visible */}
         <Link to="/" className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gold-gradient rounded-lg flex items-center justify-center">
-            <span className="text-space-dark font-bold text-lg">RH</span>
+          <div className="w-20 h-10 bg-gold-gradient rounded-lg flex items-center justify-center">
+            <img src="/images/logo1.png" alt="Right Home Logo" className="w-40 h-30" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-gradient">Right Home</h1>

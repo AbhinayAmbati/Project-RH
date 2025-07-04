@@ -13,8 +13,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center space-x-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-gold to-gold/80 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-                <span className="text-lg font-bold text-space-dark">RH</span>
+              <div className="w-20 h-10 bg-gradient-to-br from-gold to-gold/80 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
+                <img src="/images/logo1.png" alt="Right Home Logo" className="w-40 h-20 object-contain" />
               </div>
               <span className="text-2xl font-bold text-white group-hover:text-gold transition-colors">Right Home</span>
             </Link>

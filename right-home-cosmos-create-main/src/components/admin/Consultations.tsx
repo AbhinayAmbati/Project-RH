@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { API_URL } from '@/config/api';
 import Cookies from 'js-cookie';
 import { Search, Download, Filter, Calendar as CalendarIcon } from 'lucide-react';
+import { Loading } from '@/components/ui/loading';
 import {
   Dialog,
   DialogContent,
@@ -239,11 +240,16 @@ const Consultations: React.FC = () => {
   });
 
   if (loading) {
-    return <div className="p-6 text-white">Loading...</div>;
+    return (
+      <div className="p-6">
+        <Loading loading={loading} />
+      </div>
+    );
   }
 
   return (
     <div className="p-6">
+      <Loading loading={loading} />
       <Card className="bg-[#111] border-gray-800">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-xl font-semibold text-white">Consultation Requests</CardTitle>

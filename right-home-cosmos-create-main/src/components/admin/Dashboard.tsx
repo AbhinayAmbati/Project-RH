@@ -4,6 +4,7 @@ import { Users as UsersIcon, MessageSquare, CheckCircle, Clock } from 'lucide-re
 import { API_URL } from '@/config/api';
 import Cookies from 'js-cookie';
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Loading } from '@/components/ui/loading';
 
 interface Stats {
   totalUsers: number;
@@ -40,6 +41,7 @@ const Dashboard: React.FC = () => {
     completedConsultations: 0,
     monthlyStats: []
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -61,6 +63,8 @@ const Dashboard: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching stats:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -74,6 +78,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6">
+      <Loading loading={loading} />
       <h2 className="text-2xl font-bold text-white mb-6">Dashboard Overview</h2>
       
       {/* Stats Cards */}

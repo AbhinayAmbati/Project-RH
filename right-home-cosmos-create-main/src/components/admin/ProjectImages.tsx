@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { API_URL } from '@/config/api';
 import { useAuth } from '@/context/AuthContext';
+import { Loading } from '@/components/ui/loading';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -285,8 +286,17 @@ const ProjectImages = () => {
     return getExistingSubServices(editForm.service);
   }, [editForm.service, images]);
 
+  if (loading || uploading) {
+    return (
+      <div className="p-6">
+        <Loading loading={loading || uploading} />
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
+      <Loading loading={loading || uploading} />
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">Project Images</h2>
         <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
