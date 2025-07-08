@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 
-export const API_URL = 'https://right-homes-service.onrender.com/api';
+const URL = import.meta.env.VITE_API_URL;
+
+export const API_URL = `${URL}`;
 
 interface UserData {
   name?: string;
