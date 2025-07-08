@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-export const API_URL = import.meta.env.VITE_API_URL;
+export const API_URL = import.meta.env.VITE_API_URI;
 
 
 interface UserData {
