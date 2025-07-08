@@ -56,6 +56,8 @@ export default function Login() {
               )}
 
               <div className="space-y-4">
+                <h1 className="text-2xl font-bold text-white">Login</h1>
+                <p className="text-gray-400 text-sm">Welcome back! Please enter your details.</p>
                 <div>
                   <Label htmlFor="email" className="text-gray-400 text-sm">Email Address</Label>
                   <Input
