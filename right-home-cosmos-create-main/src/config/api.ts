@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-export const API_URL = 'http://localhost:8000/api';
+export const API_URL = 'https://right-homes-service.onrender.com/api';
 
 interface UserData {
   name?: string;
